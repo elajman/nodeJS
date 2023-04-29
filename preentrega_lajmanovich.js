@@ -51,7 +51,7 @@ manager.addProduct('Bicicleta', 'ruta', 5900, 'bici-ruta.jpg', '003', 8);
 console.log(manager.getProducts());
 
 // Obtener un producto por id
-console.log(manager.getProductById(1)); // { id: 1, title: 'Camiseta', description: 'Camiseta de algodón', price: 25.99, thumbnail: 'camiseta.jpg', code: '001', stock: 10 }
+console.log(manager.getProductById(1)); // { id: 1, title: 'Bicicleta', description: 'MTB', price: 2500, thumbnail: 'bike.jpg', code: '001', stock: 10 }
 console.log(manager.getProductById(4)); // No encontrado
 
   

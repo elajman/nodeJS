@@ -1,121 +1,53 @@
-const fs = require('fs');
+const fs = require('fs')
 
-class ProductManager {
-  constructor(filePath) {
-    this.filePath = filePath;
-    this.products = [];
-    this.lastId = 0;
-    this.loadFromFile();
-  }
+class productManager{
+    constructor(patch){
+        this.patch = patch
+    }
+    async getAllProducts(){
+        let pr = await fs.promises.readFile(this.patch, 'utf-8')
+        let prParse = JSON.parse(pr)
+        if(prParse.length <= 0){
+            console.log('No existe el Producto')
+        }else{
+            console.log(prParse)
+        }
+        console.log(prParse)
+    }
+    async deleteProducto(id){
+        let pr = await fs.promises.readFile(this.patch, 'utf-8')
+        let prParse = JSON.parse(pr)
+        
+        
+        const arrayNew = prParse.filter((ele) => {
+            return ele.id !== id
+        })
+        
+        await fs.promises.writeFile(this.patch,JSON.stringify(arrayNew,null,2), 'utf-8')
+    console.log('Producto Eliminado')
+    }
+    async updateProduct(id,infoNew){
+        let pr = await fs.promises.readFile(this.patch, 'utf-8')
+        let prParse = JSON.parse(pr)
 
-  addProduct(product) {
-    // valido campos
-    if (!product.code || !product.name || !product.price) {
-      console.log('Product code, name, and price are required.');
-      return;
+        let arrayUpdate = prParse.map((ele)=>{
+            if(ele.id == id){
+                return {...ele, title:infoNew.title,price:infoNew.price}
+            
+            } else{
+                return ele
+            }
+        })
+        console.log(arrayUpdate)
+        await fs.promises.writeFile(this.patch, JSON.stringify(arrayUpdated,null,2), 'utf-8')
+        console.log('producto Actualizado!')    
     }
 
-    // chequeo si existe el ID
-    const existingProduct = this.products.find(p => p.code === product.code);
-    if (existingProduct) {
-      console.log(`Product with code ${product.code} already exists.`);
-      return;
-    }
-
-    // creo nuevo producto y autoincremento
-    const newProduct = { id: ++this.lastId, ...product };
-    this.products.push(newProduct);
-    console.log(`Product with code ${product.code} has been added with ID ${newProduct.id}.`);
-
-    this.saveToFile();
-  }
-
-  getProducts() {
-    return this.products;
-  }
-
-  getProductById(id) {
-    const product = this.products.find(p => p.id === id);
-    if (!product) {
-      console.log(`Product with ID ${id} not found.`);
-      return;
-    }
-    return product;
-  }
-
-  updateProduct(id, updatedProduct) {
-    const productIndex = this.products.findIndex(p => p.id === id);
-    if (productIndex === -1) {
-      console.log(`Product with ID ${id} not found.`);
-      return;
-    }
-
-    // guardo el ID y actualido otros campos
-    this.products[productIndex] = { ...this.products[productIndex], ...updatedProduct };
-    console.log(`Product with ID ${id} has been updated.`);
-
-    this.saveToFile();
-  }
-
-  deleteProduct(id) {
-    const productIndex = this.products.findIndex(p => p.id === id);
-    if (productIndex === -1) {
-      console.log(`Product with ID ${id} not found.`);
-      return;
-    }
-
-    this.products.splice(productIndex, 1);
-    console.log(`Product with ID ${id} has been deleted.`);
-
-    this.saveToFile();
-  }
-
-  loadFromFile() {
-    try {
-      const data = fs.readFileSync(this.filePath, 'utf8');
-      this.products = JSON.parse(data);
-      this.lastId = this.calculateLastId();
-      console.log('Product data loaded from file.');
-    } catch (err) {
-      console.log('Error loading product data from file.');
-    }
-  }
-
-  saveToFile() {
-    try {
-      const data = JSON.stringify(this.products);
-      fs.writeFileSync(this.filePath, data);
-      console.log('Product data saved to file.');
-    } catch (err) {
-      console.log('Error saving product data to file.');
-    }
-  }
-
-  calculateLastId() {
-    let maxId = 0;
-    for (const product of this.products) {
-      if (product.id > maxId) {
-        maxId = product.id;
-      }
-    }
-    return maxId;
-  }
 }
+let newPr = new productManager('./productos.json')
 
-  
-const manager = new ProductManager();
-
-// Agregar productos
-manager.addProduct('Bicicleta', 'MTB', 2500, 'bici.jpg', '001', 10);
-manager.addProduct('Bicicleta', 'MTB', 3900, 'biciMtb.jpg', '002', 5);
-manager.addProduct('Bicicleta', 'ruta', 5900, 'bici-ruta.jpg', '003', 8);
-
-// Obtener todos los productos
-console.log(manager.getProducts());
-
-// Obtener un producto por id
-console.log(manager.getProductById(1)); // { id: 1, title: 'Bicicleta', description: 'MTB', price: 2500, thumbnail: 'bici.jpg', code: '001', stock: 10 }
-console.log(manager.getProductById(4)); // No encontrado
+newPr.updateProduct('scott.mtb.303030',{price: 3999, title:"titulo modificado"})
+newPr.getAllProducts()
 
   
 

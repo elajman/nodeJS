@@ -1,0 +1,29 @@
+[
+    {
+      "id": "01",
+      "marca": "speciallized",
+      "title": "producto test 1",
+      "description": "test 1",
+      "thumbnail": "sin imagen",
+      "price": 200,
+      "stock": 10
+    },
+    {
+      "id": "02",
+      "marca": "scott",
+      "title": "producto test 2",
+      "description": "test 2",
+      "thumbnail": "sin imagen",
+      "price": 200,
+      "stock": 5
+    },
+    {
+      "id": "03",
+      "marca": "trek",
+      "title": "titulo modificado",
+      "description": "test 3",
+      "thumbnail": "sin imagen",
+      "price": 5000,
+      "stock": 18
+    }
+  ]

@@ -114,11 +114,7 @@ manager.addProduct('Bicicleta', 'ruta', 5900, 'bici-ruta.jpg', '003', 8);
 console.log(manager.getProducts());
 
 // Obtener un producto por id
-<<<<<<< HEAD
 console.log(manager.getProductById(1)); // { id: 1, title: 'Bicicleta', description: 'MTB', price: 2500, thumbnail: 'bici.jpg', code: '001', stock: 10 }
-=======
-console.log(manager.getProductById(1)); // { id: 1, title: 'Bicicleta', description: 'MTB', price: 2500, thumbnail: 'bike.jpg', code: '001', stock: 10 }
->>>>>>> 4e6ee8a4cf0eeab9a049be075c01c25341f3a048
 console.log(manager.getProductById(4)); // No encontrado
 
   

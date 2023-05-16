@@ -1,44 +1,107 @@
+const fs = require('fs');
+
 class ProductManager {
-    constructor() {
-      this.products = [];
-      this.nextId = 1;
+  constructor(filePath) {
+    this.filePath = filePath;
+    this.products = [];
+    this.lastId = 0;
+    this.loadFromFile();
+  }
+
+  addProduct(product) {
+    // valido campos
+    if (!product.code || !product.name || !product.price) {
+      console.log('Product code, name, and price are required.');
+      return;
     }
-  
-    addProduct(title, description, price, thumbnail, code, stock) {
-      if (!title || !description || !price || !thumbnail || !code || !stock) {
-        throw new Error('Todos los campos son requeridos');
-      }
-  
-      if (this.products.some((product) => product.code === code)) {
-        throw new Error('El codigo ya existe');
-      }
-  
-      const product = {
-        id: this.nextId,
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-      };
-      this.products.push(product);
-      this.nextId++;
+
+    // chequeo si existe el ID
+    const existingProduct = this.products.find(p => p.code === product.code);
+    if (existingProduct) {
+      console.log(`Product with code ${product.code} already exists.`);
+      return;
     }
-  
-    getProducts() {
-      return this.products;
+
+    // creo nuevo producto y autoincremento
+    const newProduct = { id: ++this.lastId, ...product };
+    this.products.push(newProduct);
+    console.log(`Product with code ${product.code} has been added with ID ${newProduct.id}.`);
+
+    this.saveToFile();
+  }
+
+  getProducts() {
+    return this.products;
+  }
+
+  getProductById(id) {
+    const product = this.products.find(p => p.id === id);
+    if (!product) {
+      console.log(`Product with ID ${id} not found.`);
+      return;
     }
-  
-    getProductById(id) {
-      const product = this.products.find((product) => product.id === id);
-      if (product) {
-        return product;
-      } else {
-        console.error('No encontrado');
-      }
+    return product;
+  }
+
+  updateProduct(id, updatedProduct) {
+    const productIndex = this.products.findIndex(p => p.id === id);
+    if (productIndex === -1) {
+      console.log(`Product with ID ${id} not found.`);
+      return;
+    }
+
+    // guardo el ID y actualido otros campos
+    this.products[productIndex] = { ...this.products[productIndex], ...updatedProduct };
+    console.log(`Product with ID ${id} has been updated.`);
+
+    this.saveToFile();
+  }
+
+  deleteProduct(id) {
+    const productIndex = this.products.findIndex(p => p.id === id);
+    if (productIndex === -1) {
+      console.log(`Product with ID ${id} not found.`);
+      return;
+    }
+
+    this.products.splice(productIndex, 1);
+    console.log(`Product with ID ${id} has been deleted.`);
+
+    this.saveToFile();
+  }
+
+  loadFromFile() {
+    try {
+      const data = fs.readFileSync(this.filePath, 'utf8');
+      this.products = JSON.parse(data);
+      this.lastId = this.calculateLastId();
+      console.log('Product data loaded from file.');
+    } catch (err) {
+      console.log('Error loading product data from file.');
     }
   }
+
+  saveToFile() {
+    try {
+      const data = JSON.stringify(this.products);
+      fs.writeFileSync(this.filePath, data);
+      console.log('Product data saved to file.');
+    } catch (err) {
+      console.log('Error saving product data to file.');
+    }
+  }
+
+  calculateLastId() {
+    let maxId = 0;
+    for (const product of this.products) {
+      if (product.id > maxId) {
+        maxId = product.id;
+      }
+    }
+    return maxId;
+  }
+}
+
   
 const manager = new ProductManager();
 

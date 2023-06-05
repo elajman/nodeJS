@@ -20,10 +20,29 @@
     {
       "id": "03",
       "marca": "trek",
-      "title": "titulo modificado",
+      "title": "producto test 3",
       "description": "test 3",
       "thumbnail": "sin imagen",
       "price": 5000,
       "stock": 18
+    },
+    {
+      "id": "04",
+      "marca": "trek",
+      "title": "producto test 4",
+      "description": "test 4",
+      "thumbnail": "sin imagen",
+      "price": 5000,
+      "stock": 18
+    },
+    {
+      "id": "05",
+      "marca": "",
+      "title": "producto test 5",
+      "description": "test 5",
+      "thumbnail": "sin imagen",
+      "price": 5000,
+      "stock": 18
     }
+
   ]

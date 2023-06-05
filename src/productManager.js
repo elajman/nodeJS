@@ -1,76 +1,38 @@
-const fs = require('fs');
+const fs = require("fs");
 
-class productManager {
-  constructor(path) {
-    this.path = path;
+class ProductManager {
+  constructor(patch) {
+    this.patch = patch;
   }
 
   async getAllProducts() {
-    let pr = await fs.promises.readFile(this.path, 'utf-8');
-    let prParse = JSON.parse(pr);
-
-    if (prParse.length <= 0) {
-      console.log('No existe el Producto');
-    } else {
-      console.log(prParse);
+    try {
+      const pr = await fs.promises.readFile(this.patch, "utf-8");
+      const prParse = JSON.parse(pr);
+      if (prParse.length <= 0) {
+        return "No existen los productos";
+      } else {
+        return prParse;
+      }
+    } catch (error) {
+      throw new Error("Error, No se puede leer el Archivo: " + error);
     }
   }
 
-  async deleteProducto(id) {
-    let pr = await fs.promises.readFile(this.path, 'utf-8');
-    let prParse = JSON.parse(pr);
-
-    const arrayNew = prParse.filter((ele) => {
-      return ele.id !== id;
-    });
-
-    await fs.promises.writeFile(this.path, JSON.stringify(arrayNew, null, 2), 'utf-8');
-    console.log('Producto Eliminado');
-  }
-
-  async updateProduct(id, infoNew) {
-    let pr = await fs.promises.readFile(this.path, 'utf-8');
-    let prParse = JSON.parse(pr);
-
-    let arrayUpdate = prParse.map((ele) => {
-      if (ele.id === id) {
-        return { ...ele, title: infoNew.title, price: infoNew.price };
+  async getProductById(id) {
+    try {
+      const pr = await fs.promises.readFile(this.patch, "utf-8");
+      const prParse = JSON.parse(pr);
+      const product = prParse.find((ele) => ele.id === id);
+      if (product) {
+        return product;
       } else {
-        return ele;
+        return "No se encontró ningún producto con el ID";
       }
-    });
-
-    console.log(arrayUpdate);
-    await fs.promises.writeFile(this.path, JSON.stringify(arrayUpdate, null, 2), 'utf-8');
-    console.log('Producto Actualizado!');
-  }
-
-  async addProduct(info) {
-    let pr = await fs.promises.readFile(this.path, 'utf-8');
-    let prParse = JSON.parse(pr);
-
-    const newId = generateUniqueId();
-
-    const newProduct = {
-      id: newId,
-      title: info.title,
-      price: info.price,
-    };
-
-    prParse.push(newProduct);
-
-    await fs.promises.writeFile(this.path, JSON.stringify(prParse, null, 2), 'utf-8');
-
-    console.log('Producto Agregado!');
+    } catch (error) {
+      throw new Error("Error al leer el archivo: " + error);
+    }
   }
 }
 
-let newPr = new productManager('./productos.json');
-
-newPr.updateProduct('scott.mtb.303030', { price: 3999, title: 'titulo modificado' });
-newPr.addProduct({ title: 'New Product', price: 999 });
-newPr.getAllProducts();
-
-function generateUniqueId() {
-  return Date.now().toString();
-}
+module.exports = ProductManager;

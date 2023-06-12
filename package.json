@@ -1,23 +1,18 @@
 {
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "name": "preentrega-1",
+  "name": "entregable_4",
   "version": "1.0.0",
-  "description": "proyecto node",
-  "main": "/src/app.js",
-  "devDependencies": {},
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/elajman/nodeJS.git"
-  },
-  "author": "Ezequiel lajman",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/elajman/nodeJS/issues"
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
+    "socket.io": "^4.6.2"
   },
-  "homepage": "https://github.com/elajman/nodeJS#readme"
+  "devDependencies": {},
+  "description": ""
 }

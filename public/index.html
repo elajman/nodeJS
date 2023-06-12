@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos en tiempo real</title>
+</head>
+<body>
+    <form id="create-product-form">
+        <input type="text" id="product-name" placeholder="Nombre del producto" />
+        <button type="submit">Crear</button>
+      </form>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        const socket = io();
+    
+        const createProductForm = document.getElementById('create-product-form');
+        const productNameInput = document.getElementById('product-name');
+    
+        createProductForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const productName = productNameInput.value;
+          if (productName) {
+            socket.emit('createProduct', { id: Date.now(), name: productName });
+          }
+          productNameInput.value = '';
+        });
+      </script>
+</body>
+</html>

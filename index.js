@@ -1,38 +1,59 @@
-const express = require('express')
-const app = express()
-const http = require('http')
-const handlebars = require('express-handlebars')
-const routerHome = require('./routes/home.router')
-const server = http.createServer(app)
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const exphbs = require('express-handlebars');
 
-//configuracion de socket ioo
-const io = new Server(server)
+// Configuro Handlebars template engine
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
-app.use(express.static(__dirname+'/public'))
+// Creo lista de productos
+let products = [
+  { id: 1, name: 'Mtb Trek' },
+  { id: 2, name: 'Mtb Specialized' },
+  { id: 3, name: 'Mtb Cannondale' }
+];
 
+// archivos estaticos del directorio publico
+app.use(express.static('public'));
+
+// renderizo home
+app.get('/', (req, res) => {
+  res.render('home', { products });
+});
+
+// renderizo productos en tiempo real
+app.get('/realTimeProducts', (req, res) => {
+  res.render('realTimeProducts', { products });
+});
+
+// administro las conexiones websocket
 io.on('connection', (socket) => {
-    console.log('nuevo usuario conectado')
-    socket.emit('menssage', 'Hola cliente Bienvenido')
-    socket.on('new-message', (data) => {
-        console.log(data)
-        message.push(data)
-        io.sockets.emit('message', message)
-        // socket.emit('message', message)
-    })
-})
+  console.log('A user connected');
 
-//JS de parte del cliente
+  // Envio lista de productos al cliente conectado
+  socket.emit('products', products);
 
-//configuracion de handlebars
-app.engine('handlebars', handlebars.engine())
-app.set('view engine', 'handlebars')
-app.set('views', __dirname+'/views')
+  //creacion de nuevo producto
+  socket.on('createProduct', (product) => {
+    products.push(product);
+    io.emit('products', products);
+  });
 
-let message = []
+  // eliminacion de producto
+  socket.on('deleteProduct', (productId) => {
+    products = products.filter((product) => product.id !== productId);
+    io.emit('products', products);
+  });
 
-//inicializr rutas
-app.use('/home', routerHome)
+  // manejo de desconexion 
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
 
-app.listen(8080, () => {
-    console.log('server ok')
-})
+const PORT = 3000;
+http.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

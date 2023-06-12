@@ -1,9 +1,15 @@
-<div>
-    <h1>Lista de Productos</h1>
-   
-</div>
-
-<div id="caja"></div>
-
-<script src="/socket.io/socket.io.js" ></script>
-<script src="/JS/index.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTB</title>
+</head>
+<body>
+    <h1>Inicio</h1>
+  <ul>
+    {{#each products}}
+    <li>{{this.name}}</li>
+    {{/each}}
+</body>
+</html>
